@@ -398,6 +398,7 @@
     <Compile Include="Strategies\NBS\NqSystem1Strategy.cs" />
     <Compile Include="Strategies\NBS\TestStrategy.cs" />
     <Compile Include="Strategies\NBS\TripleIndicatorStrategy.cs" />
+    <Compile Include="Strategies\NinjaCodingYZ\YZAtmSample.cs" />
     <Compile Include="SuperDomColumns\%40APQ.cs" />
     <Compile Include="SuperDomColumns\%40Notes.cs" />
     <Compile Include="SuperDomColumns\%40ProfitLoss.cs" />
