@@ -461,6 +461,7 @@
     <Compile Include="Indicators\TradeSaber\MultiSeriesHL.cs" />
     <Compile Include="Strategies\LONGSHORTToolbarButtonsB9.cs" />
     <Compile Include="Indicators\AUN_Indi\Ehlers\EhlersDecyclerII.cs" />
+    <Compile Include="Strategies\NBS\PrintUniRenkoValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resource.resx">
