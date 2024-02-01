@@ -97,6 +97,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.dll
 
 # Chutzpah Test files
 _Chutzpah*
@@ -404,3 +405,4 @@ FodyWeavers.xsd
 /fr-FR/NinjaTrader.Custom.resources.dll
 /it-IT/NinjaTrader.Custom.resources.dll
 /NinjaTrader.Custom.dll
+/zh-Hans/NinjaTrader.Custom.resources.dll
