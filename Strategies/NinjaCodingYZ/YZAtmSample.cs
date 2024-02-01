@@ -28,19 +28,19 @@ namespace NinjaTrader.NinjaScript.Strategies.YZ
         private bool _enterShort; // short signal i.e. when our red bar's close has crossed the line on y-axis
         private bool _attemptedToInitializeAtm; // a double protection for if we have ATM Strategy already created or not
         private string _modeInfo;
-        private bool _lineOnChart; // should be the horizontal ray we created 
-        private double _stop;
-        private double _currentLineVal;
-        private double _prevLineVal;
-        private bool _isModeLong;
-        private bool _isModeShort;
-        private bool _replacedStopTarget;
+        private bool _lineOnChart; // this is the line drawn by the user
+        private double _stop; // this the line for stop loss; but what if we multiple stop losses in our ATM Strategy
+        private double _currentLineVal; // this is the ray drawn for the bar[0]
+        private double _prevLineVal; // this is the ray drawn on previous iteration and it is used for identifying the crossover
+        private bool _isModeLong; // 
+        private bool _isModeShort; // 
+        private bool _replacedStopTarget; // 
 
         #region Params
 
         [NinjaScriptProperty]
         [Display(Name = "ATM Name", GroupName = "Entry Module", Order = 0)]
-        public string ATMName { get; set; }
+        public string ATMName { get; set; } // used by ATM Strategy methods
 
         [XmlIgnore]
         [NinjaScriptProperty]
@@ -102,7 +102,7 @@ namespace NinjaTrader.NinjaScript.Strategies.YZ
         {
             Description = StrategyDesc;
             Name = StrategyName + " " + SystemVersion;
-            Calculate = Calculate.OnEachTick;
+            Calculate = Calculate.OnEachTick; // we will check on each tick for the crossover
             BarsRequiredToTrade = 0;
             Slippage = 0;
             StartBehavior = StartBehavior.WaitUntilFlat;
@@ -273,16 +273,12 @@ namespace NinjaTrader.NinjaScript.Strategies.YZ
             {
                 _globalModeName = ShortMode;
                 color = Brushes.DarkRed;
-
-
             }
             else if (_globalModeName == ShortMode || _globalModeName == null)
             {
                 _globalModeName = LongMode;
                 color = Brushes.Green;
-
             }
-
 
             _toggle.Content = _globalModeName;
             _toggle.Background = color;
@@ -443,15 +439,12 @@ namespace NinjaTrader.NinjaScript.Strategies.YZ
             {
                 if (draw is NinjaTrader.NinjaScript.DrawingTools.Line)
                 {
-
                     var line = draw as NinjaTrader.NinjaScript.DrawingTools.Line;
-
                     if (_globalModeName == LongMode)
                     {
                         _isModeLong = true;
                         _isModeShort = false;
                         line.Stroke.Brush = ColorLong;
-
                     }
                     else if (_globalModeName == ShortMode)
                     {
@@ -464,7 +457,6 @@ namespace NinjaTrader.NinjaScript.Strategies.YZ
                         _isModeLong = false;
                         _isModeShort = false;
                         line.Stroke.Brush = Brushes.Blue;
-
                     }
 
                     var x3 = ChartControl.GetXByBarIndex(ChartBars, Bars.Count - 1);
