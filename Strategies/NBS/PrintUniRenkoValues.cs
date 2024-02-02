@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using NinjaTrader.NinjaScript.DrawingTools;
 using System.Collections;
 using NinjaTrader.Gui;
+using NinjaTrader.NinjaScript.BarsTypes;
 
 namespace NinjaTrader.NinjaScript.Strategies.NBS
 {
@@ -23,13 +24,17 @@ namespace NinjaTrader.NinjaScript.Strategies.NBS
             {
                 SetDefaults();
             }
+            else if (State == State.Configure)
+            {
+                ClearOutputWindow();
+            }
         }
 
         private void SetDefaults()
         {
             Name = "Print_UniRenko_Value";
             Description = "Access UniRenko Bars and get values from them.";
-            Calculate = Calculate.OnBarClose;
+            Calculate = Calculate.OnEachTick;
             Slippage = 0;
             IsExitOnSessionCloseStrategy = false;
             ExitOnSessionCloseSeconds = 30;
@@ -37,11 +42,28 @@ namespace NinjaTrader.NinjaScript.Strategies.NBS
 
         protected override void OnBarUpdate()
         {
-            if (State == State.Historical) return;
+            //if (State == State.Historical) return;
 
-            Print($"Bars.Count: {Bars.Count} and Bars.LastBarTime: {Bars.LastBarTime}");
+            if (Bars.IsFirstBarOfSession)
+            {
+                Print($"Instrument.MasterInstrument.TickSize: {Instrument.MasterInstrument.TickSize}, Instrument.MasterInstrument.PointValue: {Instrument.MasterInstrument.PointValue}");
+            }
+
+            //Print($"Bars.Count: {Bars.Count} and Bars.LastBarTime: {Bars.LastBarTime}");
             int index = Bars.Count - 2;
-            Print($"Bars.BarsType.Name: {Bars.BarsType.Name}, Bars.GetAsk({index}): {Bars.GetAsk(index)}, Bars.GetClose({index}): {Bars.GetClose(index)}");
+            double c_high = Bars.GetHigh(index);
+            double c_low = Bars.GetLow(index);
+            double c_open = Bars.GetOpen(index);
+            double c_close = Bars.GetClose(index);
+            double p_high = Bars.GetHigh(index - 1);
+            double p_low = Bars.GetLow(index - 1);
+            double p_open = Bars.GetOpen(index - 1);
+            double p_close = Bars.GetClose(index - 1);
+            //Print($"Bars.BarsType.BarsPeriod.Value2: {Bars.BarsType.BarsPeriod.Value2}, Bars.BarsType.BarsPeriod.Value: {Bars.BarsType.BarsPeriod.Value}, Bars.GetType(): {Bars.GetType()}, Bars.BarsType: {Bars.BarsType}, Bars.GetAsk({index}): {Bars.GetAsk(index)}, Bars.GetClose({index}): {Bars.GetClose(index)}");
+            double candleSizeValue = c_high - c_low;
+            Print($"c_high - c_low -> {c_high - c_low}, (c_high - c_low) * 4 -> {(c_high - c_low) * 4}");
+            Print($"Math.Abs(c_open - c_close) -> {Math.Abs(c_open - c_close)}, (Math.Abs(c_open - c_close)) * 4 -> {(Math.Abs(c_open - c_close)) * 4}");
+
         }
     }
 }
