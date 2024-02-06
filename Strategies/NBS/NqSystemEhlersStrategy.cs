@@ -38,11 +38,12 @@ namespace NinjaTrader.NinjaScript.Strategies.NBS
             if (State == State.SetDefaults)
             {
                 SetDefaults();
+                Calculate = Calculate.OnBarClose;
             }
             else if (State == State.DataLoaded)
             {
                 ClearOutputWindow();
-                _ehlersDecyclerII = EhlersDecyclerII(Close, 125, 0.01d, Brushes.Red, Brushes.LimeGreen);
+                _ehlersDecyclerII = EhlersDecyclerII(Close, 125, 0.001d, Brushes.Red, Brushes.LimeGreen);
                 _ehlersMotherOfAdaptiveMovingAverages = EhlersMotherOfAdaptiveMovingAverages(Close, 0.5d, 0.05d, Brushes.Red, Brushes.LimeGreen);
 
                 _ehlersDecyclerII.Displacement = 1;
@@ -61,13 +62,15 @@ namespace NinjaTrader.NinjaScript.Strategies.NBS
 
         protected override void OnBarUpdate()
         {
+            if (State == State.Historical) return;
+
             double ehlerDown = _ehlersDecyclerII.DecycleOffsetDown[0];
-            double currentPrice = Close[0];
+            double closingPrice = Close[0];
             
-            if (CrossAbove(_ehlersDecyclerII.DecycleOffsetDown, Close, 1))
-                Print($"Has crossed above the Ehler Decycler(down): {ehlerDown}, currentPrice: {currentPrice} and Time[0]: {Time[0]}");
-            else if (CrossBelow(_ehlersDecyclerII.DecycleOffsetDown, Close, 1))
-                Print($"Has crossed below the Ehler Decycler(down): {ehlerDown}, currentPrice: {currentPrice} and Time[0]: {Time[0]}");
+            if (CrossAbove(Close, _ehlersDecyclerII.DecycleOffsetDown, 1))
+                Print($"Has crossed above the Ehler Decycler(down): {ehlerDown}, closingPrice: {closingPrice} and Time[0]: {Time[0]}");
+            else if (CrossBelow(Close, _ehlersDecyclerII.DecycleOffsetDown, 1))
+                Print($"Has crossed below the Ehler Decycler(down): {ehlerDown}, closingPrice: {closingPrice} and Time[0]: {Time[0]}");
         }
 
         //#region Properties
